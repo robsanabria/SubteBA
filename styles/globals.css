@@ -1,8 +1,18 @@
 @import "tailwindcss";
+@import "ar-poncho/dist/css/poncho.min.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --arg-azul: #0072BB;
+  --arg-azul-oscuro: #0054A8;
+  --arg-celeste: #2897D4;
+  --arg-gris: #707070;
+  --arg-gris-claro: #F2F2F2;
+  --arg-gris-oscuro: #333333;
+  --arg-verde: #2E7D33;
+  --arg-rojo: #C62828;
+  --arg-amarillo: #F9A822;
 }
 
 @theme inline {
@@ -22,5 +32,77 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.alert {
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-heading {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.bg-arg-azul {
+  background-color: var(--arg-azul);
+}
+
+.bg-arg-celeste {
+  background-color: var(--arg-celeste);
+}
+
+.bg-arg-verde {
+  background-color: var(--arg-verde);
+}
+
+.bg-arg-amarillo {
+  background-color: var(--arg-amarillo);
+}
+
+.bg-arg-rojo {
+  background-color: var(--arg-rojo);
+}
+
+.text-dark {
+  color: #333;
+}
+
+.text-white {
+  color: white;
+}
+
+/* Quitar estilos de hipervínculo por defecto */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Estilos personalizados para el breadcrumb */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+}
+
+.breadcrumb-item.active {
+  color: var(--arg-gris);
 }

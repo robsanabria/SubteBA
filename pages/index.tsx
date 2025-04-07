@@ -43,7 +43,7 @@ export default function Home() {
       <Head>
         <title>Alertas del Subte - Buenos Aires</title>
         <meta name="description" content="Estado actual del Subte de Buenos Aires" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/train.png" />
       </Head>
       
       <Navbar />

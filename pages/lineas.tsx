@@ -1,50 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import LineCard from '@/components/LineCard'
-
-interface Line {
-  id: string
-  name: string
-  status: string
-  description: string
-  color: string
-}
-
-const lineColors = {
-  'Línea A': '#2E96D3',
-  'Línea B': '#D52B1E',
-  'Línea C': '#0E4FA3',
-  'Línea D': '#197E5E',
-  'Línea E': '#8B1E9B',
-  'Línea H': '#E0C72B',
-  'Premetro': '#F5A623'
-}
+import { LineAlert } from '@/types/alerts'
 
 export default function Lineas() {
-  const [lines, setLines] = useState<Line[]>([])
+  const [alerts, setAlerts] = useState<LineAlert[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/alerts')
       .then((res) => res.json())
       .then((data) => {
-        const lineData = data.current.map((alert: any) => {
-          const name = alert.alert?.header_text?.translation?.[0]?.text || ''
-          const description = alert.alert?.description_text?.translation?.[0]?.text || 'Servicio normal'
-          const status = alert.alert?.status || 'normal'
-          const color = lineColors[name as keyof typeof lineColors] || '#0066CC'
-          return { 
-            id: alert.id, 
-            name, 
-            status, 
-            description, 
-            color 
-          }
-        })
-        setLines(lineData)
+        setAlerts(data.current || [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -53,19 +23,19 @@ export default function Lineas() {
   return (
     <>
       <Head>
-        <title>Líneas del Subte - Buenos Aires</title>
-        <meta name="description" content="Estado de las líneas del Subte de Buenos Aires" />
+        <title>Estado de las Líneas - Alertas del Subte</title>
+        <meta name="description" content="Estado actual de todas las líneas del Subte de Buenos Aires" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <Navbar />
-      
+
       <main className="container py-8">
         <Breadcrumb />
         
-        <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2">🚇 Líneas del Subte</h1>
-          <p className="text-arg-gris-oscuro">Estado actual de cada línea del Subte de Buenos Aires</p>
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Estado de las Líneas</h1>
+          <p className="text-arg-gris-oscuro">Estado actual de todas las líneas del Subte de Buenos Aires</p>
         </header>
 
         {loading ? (
@@ -73,20 +43,26 @@ export default function Lineas() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-arg-azul"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {lines.map((line) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {alerts.map((alert) => (
               <LineCard
-                key={line.id}
-                name={line.name}
-                status={line.status}
-                description={line.description}
-                color={line.color}
+                key={alert.id}
+                name={alert.alert.header_text.translation[0].text}
+                status={alert.alert.status || 'normal'}
+                description={alert.alert.description_text.translation[0].text}
+                color={alert.id === 'linea-a' ? '#2E96D3' :
+                       alert.id === 'linea-b' ? '#D52B1E' :
+                       alert.id === 'linea-c' ? '#0E4FA3' :
+                       alert.id === 'linea-d' ? '#197E5E' :
+                       alert.id === 'linea-e' ? '#8B1E9B' :
+                       alert.id === 'linea-h' ? '#E0C72B' :
+                       '#F5A623'}
               />
             ))}
           </div>
         )}
       </main>
-      
+
       <Footer />
     </>
   )

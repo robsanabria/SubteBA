@@ -5,16 +5,10 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import LineCard from '@/components/LineCard'
-
-interface Alert {
-  id: string
-  header: string
-  description: string
-  timestamp: string
-}
+import { Alert, LineAlert } from '@/types/alerts'
 
 export default function Home() {
-  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [alerts, setAlerts] = useState<LineAlert[]>([])
   const [history, setHistory] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -22,22 +16,12 @@ export default function Home() {
     fetch('/api/alerts')
       .then((res) => res.json())
       .then((data) => {
-        setAlerts(data.current?.map(mapAlert) || [])
-        setHistory(data.history?.map(mapAlert) || [])
+        setAlerts(data.current || [])
+        setHistory(data.history || [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
   }, [])
-
-  function mapAlert(alert: any): Alert {
-    const id = alert.id
-    const header = alert.alert?.header_text?.translation?.[0]?.text || alert.header || 'Sin título'
-    const description = alert.alert?.description_text?.translation?.[0]?.text || alert.description || 'Sin descripción'
-    const timestamp = alert.timestamp || new Date().toLocaleString('es-AR', {
-      timeZone: 'America/Argentina/Buenos_Aires',
-    })
-    return { id, header, description, timestamp }
-  }
 
   function getAlertType(header: string, description: string): 'success' | 'warning' | 'danger' | 'info' {
     const lowerHeader = header.toLowerCase()
@@ -59,7 +43,7 @@ export default function Home() {
       <Head>
         <title>Alertas del Subte - Buenos Aires</title>
         <meta name="description" content="Estado actual del Subte de Buenos Aires" />
-        <link rel="icon" href="/transporte-publico-dut.svg" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       
       <Navbar />
@@ -111,16 +95,15 @@ export default function Home() {
                   {alerts.map((alert) => (
                     <LineCard
                       key={alert.id}
-                      name={alert.header}
-                      status={getAlertType(alert.header, alert.description) === 'danger' ? 'interrumpido' : 
-                             getAlertType(alert.header, alert.description) === 'warning' ? 'demora' : 'normal'}
-                      description={alert.description}
-                      color={alert.header.includes('Línea A') ? '#2E96D3' :
-                             alert.header.includes('Línea B') ? '#D52B1E' :
-                             alert.header.includes('Línea C') ? '#0E4FA3' :
-                             alert.header.includes('Línea D') ? '#197E5E' :
-                             alert.header.includes('Línea E') ? '#8B1E9B' :
-                             alert.header.includes('Línea H') ? '#E0C72B' :
+                      name={alert.alert.header_text.translation[0].text}
+                      status={alert.alert.status || 'normal'}
+                      description={alert.alert.description_text.translation[0].text}
+                      color={alert.id === 'linea-a' ? '#2E96D3' :
+                             alert.id === 'linea-b' ? '#D52B1E' :
+                             alert.id === 'linea-c' ? '#0E4FA3' :
+                             alert.id === 'linea-d' ? '#197E5E' :
+                             alert.id === 'linea-e' ? '#8B1E9B' :
+                             alert.id === 'linea-h' ? '#E0C72B' :
                              '#F5A623'}
                     />
                   ))}

@@ -1,8 +1,9 @@
 // api/alerts.ts
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Alert, LineAlert, LineState, SubwayLine } from '@/types/alerts'
 
 // Almacenamiento en memoria para el historial
-const alertHistory: { id: string; header: string; description: string; timestamp: string }[] = []
+const alertHistory: Alert[] = []
 
 // Datos de ejemplo para el historial
 const sampleHistory = [
@@ -27,7 +28,7 @@ const sampleHistory = [
 ]
 
 // Lista de todas las líneas del subte
-const allLines = [
+const allLines: SubwayLine[] = [
   { id: 'linea-a', name: 'Línea A', color: '#2E96D3' },
   { id: 'linea-b', name: 'Línea B', color: '#D52B1E' },
   { id: 'linea-c', name: 'Línea C', color: '#0E4FA3' },
@@ -50,13 +51,7 @@ function determineStatus(header: string, description: string): string {
     'limitado',
     'suspendido',
     'fuera de servicio',
-    'no funciona',
-    'cerrada',
-    'sin circulación',
-    'sin funcionamiento',
-    'sin servicio',
-    'sin operación',
-    'cerrado',
+    'no funciona'
   ]
 
   // Palabras clave que indican demora
@@ -89,7 +84,7 @@ function determineStatus(header: string, description: string): string {
   return 'normal'
 }
 
-function getLineFromAlert(alert: any): string | null {
+function getLineFromAlert(alert: LineAlert): string | null {
   // Intentar obtener el ID de la línea del route_id
   const routeId = alert.alert?.informed_entity?.[0]?.route_id || ''
   if (routeId.toLowerCase().includes('linea')) {
@@ -115,7 +110,10 @@ function getLineFromAlert(alert: any): string | null {
   return null
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<{ current: LineAlert[], history: Alert[] }>
+) {
   const url = 'https://apitransporte.buenosaires.gob.ar/subtes/serviceAlerts'
   const params = new URLSearchParams({
     client_id: '0d54d155ed334326a3106da69cfa3772',
@@ -126,12 +124,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const response = await fetch(`${url}?${params}`)
     const data = await response.json()
-    const newAlerts: any[] = data?.entity?.filter((e: any) => e.alert) || []
+    const newAlerts: LineAlert[] = data?.entity?.filter((e: LineAlert) => e.alert) || []
 
     const now = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })
 
     // Procesar alertas actuales
-    const lineStates = new Map<string, { status: string; description: string; alerts: string[] }>()
+    const lineStates = new Map<string, LineState>()
     
     // Primero procesamos las alertas para encontrar interrupciones y demoras
     newAlerts.forEach(alert => {
@@ -159,9 +157,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
 
-      // Agregar al historial si no existe, usando diferentes posibles ubicaciones del ID
-      const alertId = alert.id?.toString() || alert.alert?.id?.toString() || alert.alert?.alert_id?.toString() || 
-                     `${header}-${description}`.replace(/[^a-z0-9]/gi, '-')
+      // Agregar al historial si no existe
+      const alertId = alert.id?.toString() || `${header}-${description}`.replace(/[^a-z0-9]/gi, '-')
       
       if (!alertHistory.find((a) => a.id === alertId)) {
         alertHistory.push({ 
@@ -197,14 +194,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           description_text: {
             translation: [{ text: description }]
           },
-          status: status
+          status
         }
       }
     })
 
     res.status(200).json({ 
       current: linesWithAlerts, 
-      history: updatedHistory.length > 0 ? updatedHistory : [] 
+      history: updatedHistory 
     })
   } catch (error) {
     console.error('Error fetching service alerts:', error)

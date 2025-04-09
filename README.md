@@ -1,6 +1,6 @@
 # 🚇 SUBTE-BA [https://subte-ba.vercel.app](https://subte-ba.vercel.app/)
 
-![Vercel](https://vercelbadge.vercel.app/api/robsanabria/subte-ba)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercelbadge.vercel.app/api/robsanabria/subte-ba)
 ![Next.js](https://img.shields.io/badge/Next.js-15.2.4-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-%232dd4bf?logo=tailwindcss)

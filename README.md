@@ -44,7 +44,6 @@
 ### Estado del Subte en Tiempo Real
 
 - Monitoreo en tiempo real por línea (A, B, C, D, E, H)
-- Visualización clara de estados: ✅ Normal, ⚠️ Demorado, ❌ Interrumpido
 - Historial de alertas de las últimas 2 horas
 
 ### UI/UX Optimizada

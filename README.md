@@ -1,40 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🚇 SUBTE-BA [https://subte-ba.vercel.app](https://subte-ba.vercel.app/)
 
-## Getting Started
+![Vercel](https://vercelbadge.vercel.app/api/robsanabria/subte-ba)
+![Next.js](https://img.shields.io/badge/Next.js-15.2.4-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-%232dd4bf?logo=tailwindcss)
 
-First, run the development server:
+## 📌 Descripción
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Subte-BA** es una aplicación web en tiempo real que muestra el estado actual e historial de alertas del sistema de subterráneos de Buenos Aires. Integra la API oficial del Gobierno de la Ciudad y aplica el sistema de diseño oficial **Poncho** para brindar una experiencia clara, accesible y coherente con los lineamientos gubernamentales.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tecnologías Principales
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Frontend
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- **Next.js 15.2.4** – Framework React con soporte para SSR y SSG
+- **TypeScript** – Tipado estático para mayor seguridad y mantenibilidad
+- **React 18.2.0** – Biblioteca UI declarativa
+- **ar-poncho 2.0.320** – Sistema de diseño oficial del Gobierno Argentino
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Estilos y UI
 
-## Learn More
+- **TailwindCSS** – Framework CSS utilitario
+- **PostCSS** – Transformaciones CSS con JavaScript
+- **CSS Modules** – Estilos encapsulados por componente
 
-To learn more about Next.js, take a look at the following resources:
+### Backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- **API Routes de Next.js** – Endpoints serverless con lógica personalizada
+- **API del Gobierno de BA** – Fuente oficial de información sobre el subte
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Desarrollo
 
-## Deploy on Vercel
+- **ESLint** – Linter para mantener calidad y consistencia
+- **Git** – Control de versiones
+- **Vercel** – Plataforma de despliegue optimizada para Next.js
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## 🚀 Características Principales
+
+### Estado del Subte en Tiempo Real
+
+- Monitoreo en tiempo real por línea (A, B, C, D, E, H)
+- Visualización clara de estados: ✅ Normal, ⚠️ Demorado, ❌ Interrumpido
+- Historial de alertas de las últimas 2 horas
+
+### UI/UX Optimizada
+
+- Interfaz responsive y accesible
+- Sistema visual de colores y símbolos
+- Breadcrumbs para navegación jerárquica
+- Cumplimiento de lineamientos WCAG
+
+---
+
+## 🧱 Arquitectura
+
+- **Arquitectura por Componentes** – Código modular y mantenible
+- **SSR (Server-Side Rendering)** – Mejora en rendimiento y SEO
+- **API Routes** – Lógica backend embebida en el frontend
+- **Custom Hooks** – Reutilización de lógica con React
+- **Tipado Estricto con TypeScript** – Interfaces y estructuras seguras
+
+---
+
+## 🧪 Buenas Prácticas
+
+- **Mobile First** – Diseño adaptado desde móvil hacia desktop
+- **Atomic Design** – Jerarquía clara de componentes
+- **Clean Code** y **DRY** – Código limpio y sin repeticiones
+- **SOLID** – Principios de diseño orientado a objetos
+- **Control de Calidad** – ESLint + revisión de código
+
+---
+
+## 🔧 CI/CD & Despliegue
+
+- **Vercel** – Hosting automático con integración continua
+- **Deploys automáticos** – Cada push a `main` actualiza la app
+- **Variables de Entorno Seguras**
+
+---
+
+## 🏁 Logros
+
+- Integración exitosa con APIs oficiales
+- Implementación completa del sistema Poncho
+- Interfaz intuitiva y accesible
+- Código modular, tipado y escalable
+- Arquitectura optimizada para tiempo real
+
+
+---
+
+## 🧑‍💻 Autor
+
+Desarrollado por [@robsanabria](https://github.com/robsanabria)
+
+---

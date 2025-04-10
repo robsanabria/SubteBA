@@ -9,12 +9,20 @@ import { LineAlert } from '@/types/alerts'
 export default function Lineas() {
   const [alerts, setAlerts] = useState<LineAlert[]>([])
   const [loading, setLoading] = useState(true)
+  const [globalInterruption, setGlobalInterruption] = useState(false)
 
   useEffect(() => {
     fetch('/api/alerts')
       .then((res) => res.json())
       .then((data) => {
         setAlerts(data.current || [])
+        
+        // Verificar si hay una interrupción global
+        const interrupted = data.current?.some((alert: LineAlert) => 
+          alert.alert?.status === 'interrumpido'
+        ) || false;
+        setGlobalInterruption(interrupted);
+        
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -37,6 +45,13 @@ export default function Lineas() {
           <h1 className="text-3xl font-bold mb-2">Estado de las Líneas</h1>
           <p className="text-arg-gris-oscuro">Estado actual de todas las líneas del Subte de Buenos Aires</p>
         </header>
+
+        {globalInterruption && (
+          <div className="alert alert-danger mb-8" role="alert">
+            <h4 className="alert-heading">⚠️ Servicio interrumpido en la red de subterráneos</h4>
+            <p>Hay interrupciones que afectan al servicio. Por favor, consulta el estado de cada línea para más detalles.</p>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center items-center py-12">

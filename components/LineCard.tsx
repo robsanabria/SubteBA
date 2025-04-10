@@ -8,8 +8,11 @@ interface LineCardProps {
 }
 
 export default function LineCard({ name, status, description, color }: LineCardProps) {
+  // Normalizar el estado para garantizar que se muestre correctamente
+  const normalizedStatus = status.toLowerCase();
+  
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status) {
       case 'normal':
         return 'bg-success text-white'
       case 'demora':
@@ -22,7 +25,7 @@ export default function LineCard({ name, status, description, color }: LineCardP
   }
 
   const getStatusText = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status) {
       case 'normal':
         return 'Servicio normal'
       case 'demora':
@@ -34,15 +37,19 @@ export default function LineCard({ name, status, description, color }: LineCardP
     }
   }
 
-  const isNormalService = status === 'normal' && description === 'Servicio normal'
+  // Verificar si el servicio es normal o hay información específica
+  const isNormalService = normalizedStatus === 'normal' && description === 'Servicio normal';
+  
+  // Verificar si hay una interrupción
+  const isInterrupted = normalizedStatus === 'interrumpido';
 
   return (
     <div className="card" style={{ borderLeft: `4px solid ${color}` }}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-start mb-2">
           <h5 className="card-title mb-0">{name}</h5>
-          <span className={`badge ${getStatusColor(status)}`}>
-            {getStatusText(status)}
+          <span className={`badge ${getStatusColor(normalizedStatus)}`}>
+            {getStatusText(normalizedStatus)}
           </span>
         </div>
         {!isNormalService && (

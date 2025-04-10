@@ -51,7 +51,11 @@ function determineStatus(header: string, description: string): string {
     'limitado',
     'suspendido',
     'fuera de servicio',
-    'no funciona'
+    'no funciona',
+    'medida de fuerza',
+    'huelga',
+    'paro',
+    'gremial'
   ]
 
   // Palabras clave que indican demora
@@ -82,6 +86,27 @@ function determineStatus(header: string, description: string): string {
   }
 
   return 'normal'
+}
+
+// Verifica si una alerta indica una interrupción global del servicio
+function isGlobalInterruption(header: string, description: string): boolean {
+  const lowerHeader = header.toLowerCase()
+  const lowerDesc = description.toLowerCase()
+  
+  const globalKeywords = [
+    'todas las líneas',
+    'todas las lineas',
+    'todo el sistema',
+    'servicio interrumpido',
+    'medida de fuerza',
+    'paro general',
+    'huelga general',
+    'red de subterráneos'
+  ]
+  
+  return globalKeywords.some(keyword => 
+    lowerHeader.includes(keyword) || lowerDesc.includes(keyword)
+  )
 }
 
 function getLineFromAlert(alert: LineAlert): string | null {
@@ -128,36 +153,69 @@ export default async function handler(
 
     const now = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })
 
+    // Buscar si hay alguna interrupción global
+    let globalInterruption = false
+    let globalInterruptionDescription = ''
+    
+    for (const alert of newAlerts) {
+      const header = alert.alert?.header_text?.translation?.[0]?.text || ''
+      const description = alert.alert?.description_text?.translation?.[0]?.text || ''
+      
+      if (isGlobalInterruption(header, description)) {
+        globalInterruption = true
+        globalInterruptionDescription = description || header
+        break
+      }
+    }
+
     // Procesar alertas actuales
     const lineStates = new Map<string, LineState>()
     
-    // Primero procesamos las alertas para encontrar interrupciones y demoras
+    // Si hay interrupción global, marcar todas las líneas como interrumpidas
+    if (globalInterruption) {
+      for (const line of allLines) {
+        lineStates.set(line.id, {
+          status: 'interrumpido',
+          description: globalInterruptionDescription,
+          alerts: ['Servicio interrumpido']
+        })
+      }
+    }
+    
+    // Si no hay interrupción global, procesar alertas individuales
+    if (!globalInterruption) {
+      // Primero procesamos las alertas para encontrar interrupciones y demoras
+      newAlerts.forEach(alert => {
+        const header = alert.alert?.header_text?.translation?.[0]?.text || ''
+        const description = alert.alert?.description_text?.translation?.[0]?.text || ''
+        const status = determineStatus(header, description)
+        const lineName = getLineFromAlert(alert)
+        
+        if (lineName) {
+          const line = allLines.find(l => l.name.toLowerCase() === lineName.toLowerCase())
+          if (line) {
+            const currentState = lineStates.get(line.id) || { status: 'normal', description: '', alerts: [] }
+            
+            // Si hay una interrupción o demora, actualizamos el estado
+            if (status !== 'normal') {
+              currentState.status = status
+              currentState.alerts.push(header)
+              if (description && !currentState.description.includes(description)) {
+                currentState.description = currentState.description 
+                  ? `${currentState.description}. ${description}`
+                  : description
+              }
+            }
+            lineStates.set(line.id, currentState)
+          }
+        }
+      })
+    }
+
+    // Agregar al historial todas las alertas
     newAlerts.forEach(alert => {
       const header = alert.alert?.header_text?.translation?.[0]?.text || ''
       const description = alert.alert?.description_text?.translation?.[0]?.text || ''
-      const status = determineStatus(header, description)
-      const lineName = getLineFromAlert(alert)
-      
-      if (lineName) {
-        const line = allLines.find(l => l.name.toLowerCase() === lineName.toLowerCase())
-        if (line) {
-          const currentState = lineStates.get(line.id) || { status: 'normal', description: '', alerts: [] }
-          
-          // Si hay una interrupción o demora, actualizamos el estado
-          if (status !== 'normal') {
-            currentState.status = status
-            currentState.alerts.push(header)
-            if (description && !currentState.description.includes(description)) {
-              currentState.description = currentState.description 
-                ? `${currentState.description}. ${description}`
-                : description
-            }
-          }
-          lineStates.set(line.id, currentState)
-        }
-      }
-
-      // Agregar al historial si no existe
       const alertId = alert.id?.toString() || `${header}-${description}`.replace(/[^a-z0-9]/gi, '-')
       
       if (!alertHistory.find((a) => a.id === alertId)) {

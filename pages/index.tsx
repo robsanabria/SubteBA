@@ -11,6 +11,7 @@ export default function Home() {
   const [alerts, setAlerts] = useState<LineAlert[]>([])
   const [history, setHistory] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
+  const [globalInterruption, setGlobalInterruption] = useState(false)
 
   useEffect(() => {
     fetch('/api/alerts')
@@ -18,6 +19,13 @@ export default function Home() {
       .then((data) => {
         setAlerts(data.current || [])
         setHistory(data.history || [])
+        
+        // Verificar si hay una interrupción global
+        const interrupted = data.current?.some((alert: LineAlert) => 
+          alert.alert?.status === 'interrumpido'
+        ) || false;
+        setGlobalInterruption(interrupted);
+        
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -28,7 +36,10 @@ export default function Home() {
     const lowerDesc = description.toLowerCase()
     
     if (lowerHeader.includes('interrump') || lowerDesc.includes('interrump') ||
-        lowerHeader.includes('cerrad') || lowerDesc.includes('cerrad')) {
+        lowerHeader.includes('cerrad') || lowerDesc.includes('cerrad') ||
+        lowerHeader.includes('medida de fuerza') || lowerDesc.includes('medida de fuerza') ||
+        lowerHeader.includes('paro') || lowerDesc.includes('paro') ||
+        lowerHeader.includes('huelga') || lowerDesc.includes('huelga')) {
       return 'danger'
     } else if (lowerHeader.includes('demora') || lowerDesc.includes('demora')) {
       return 'warning'
@@ -62,6 +73,13 @@ export default function Home() {
           </div>
         ) : (
           <>
+            {globalInterruption && (
+              <div className="alert alert-danger mb-8" role="alert">
+                <h4 className="alert-heading">⚠️ Servicio interrumpido en la red de subterráneos</h4>
+                <p>Hay interrupciones que afectan al servicio. Por favor, consulta el estado de cada línea para más detalles.</p>
+              </div>
+            )}
+          
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">Historial reciente</h2>
               

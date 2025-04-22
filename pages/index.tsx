@@ -2,7 +2,6 @@ import Head from 'next/head'
 import SubteAlerts from './components/SubteAlerts';
 import MapaSubte from './components/mapaSubte';
 import Tarifas from './components/Tarifas'
-import '../styles/index.css'
 import { useEffect, useState } from 'react'
 
 export default function Home() {

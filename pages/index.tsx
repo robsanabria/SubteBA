@@ -18,9 +18,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Estado del Subte - Buenos Aires</title>
+      <link rel="icon" type="image/png" href="/train.png" />
+        <title>Estado del Subte - BA</title>
         <meta name="description" content="Alertas y estado del subte en tiempo real" />
-        <link rel="icon" href="/train.png" />
       </Head>
 
       {/* Header */}

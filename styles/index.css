@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* styles/global.css */
+/* Scroll suave global */
+html {
+  scroll-behavior: smooth;
+}

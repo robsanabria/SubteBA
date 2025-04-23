@@ -12,3 +12,20 @@ Aplicación web que muestra el estado de las líneas de subte de la Ciudad de Bu
 - TypeScript
 - Vercel para despliegue
 - API de alertas del Subte
+
+## Tecnologías utilizadas
+
+### Frontend
+
+- **TailwindCSS** – Framework CSS utilitario
+
+### Backend
+
+- **API Routes de Next.js** – Endpoints serverless con lógica personalizada
+- **API del Gobierno de BA** – Fuente oficial de información sobre el subte
+
+### Desarrollo
+
+- **ESLint** – Linter para mantener calidad y consistencia
+- **Git** – Control de versiones
+- **Vercel** – Plataforma de despliegue optimizada para Next.js

@@ -17,15 +17,15 @@ export default function Home() {
   return (
     <>
       <Head>
-      <link rel="icon" type="image/png" href="/train.png" />
+        <link rel="icon" type="image/png" href="/train.png" />
         <title>Estado del Subte - BA</title>
         <meta name="description" content="Alertas y estado del subte en tiempo real" />
       </Head>
 
       {/* Header */}
       <header style={{ backgroundColor: '#5A7290' }} className="text-white py-6 text-center" id="inicio">
-       <h1 className="text-3xl font-bold">🚇 Estado del Subte</h1>
-       <p className="text-sm mt-1">Información oficial y en tiempo real de la red de subterráneos</p>
+        <h1 className="text-3xl font-bold">🚇 Estado del Subte</h1>
+        <p className="text-sm mt-1">Información oficial y en tiempo real de la red de subterráneos</p>
       </header>
 
       {/* Alertas */}
@@ -34,7 +34,7 @@ export default function Home() {
         <MapaSubte />
         <Tarifas />
 
-        
+
       </main>
 
       {/* Footer */}
@@ -44,7 +44,7 @@ export default function Home() {
         <nav className="mt-2">
           <a href="#inicio" className="mx-2 hover:underline">Ir al inicio</a>
         </nav>
-        <p className="mt-2">© 2025 Alertas del Subte. Todos los derechos reservados.</p>
+        <p className="mt-2">© 2025 Alertas del Subte. Roberto Sanabria.  Todos los derechos reservados.</p>
       </footer>
     </>
   )

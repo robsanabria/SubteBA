@@ -1,6 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --gcba-blue: #336ACC;
+  --gcba-yellow: #FFD600;
+  --gcba-dark: #101E37;
+  --gcba-bg: #F3F6F9;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--gcba-bg);
+  color: var(--gcba-dark);
+}
+
 /* styles/global.css */
 /* Scroll suave global */
 html {

@@ -65,24 +65,51 @@ export default function SubteAlerts() {
   }
 
   return (
-    <div className="p-6" >
-      <h1 className="text-2xl font-bold text-center mb-4">Estado de subtes hoy </h1>
-      <div className="border-t mb-6"></div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-6 justify-items-center">
-        {SUBTE_LINES.map(line => (
-          <div key={line.id} className="text-center">
-            <div className={`w-12 h-12 ${line.color} text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto`}>
-              {line.id}
-            </div>
-            <p className="mt-2 text-sm">
-              {loading ? 'Cargando...' : getStatusForLine(line.id)}
-            </p>
-          </div>
-        ))}
+    <div className="py-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h2 className="text-3xl font-bold text-[#101E37]">Estado de la Red</h2>
+        {lastUpdated && !loading && (
+          <span className="text-sm bg-gray-100 px-3 py-1 rounded-full text-gray-600 flex items-center">
+            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+            Actualizado {formatTimeAgo(lastUpdated)}
+          </span>
+        )}
       </div>
 
-     
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {SUBTE_LINES.map(line => {
+          const status = getStatusForLine(line.id)
+          const isNormal = status === 'Normal'
+
+          return (
+            <div key={line.id} className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+              <div className="p-5 flex items-center gap-4">
+                <div className={`w-14 h-14 ${line.color} text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-sm transition-transform group-hover:scale-110`}>
+                  {line.id}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-gray-900">Línea {line.id}</h3>
+                  <div className="mt-1 flex items-center">
+                    <span className={`text-sm font-medium ${isNormal ? 'text-green-600' : 'text-red-600'}`}>
+                      {loading ? (
+                        <span className="opacity-50 italic">Cargando...</span>
+                      ) : (
+                        status
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {!isNormal && (
+                  <div className="bg-red-50 p-2 rounded-full">
+                    <span className="text-red-500 text-lg">⚠️</span>
+                  </div>
+                )}
+              </div>
+              <div className={`h-1.5 w-full ${isNormal ? 'bg-green-500' : 'bg-red-500'} opacity-80`}></div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
